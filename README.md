@@ -14,13 +14,13 @@ public:
       // runs in same thread that this object is created (same as subclassing qthread)
     }
     
-public slots:
+private slots:
     void init()
     {
       // runs in separate thread (same as QThread::run)
       qDebug() << QThread::currentThreadId();
     }
-    
+public slots:
     void my_slot()
     {
       // runs in separate thread or caller thread that depends on how calling this slot (direct call from object might not run in a separate thread but signal slot or invokemethod calling runs in separate thread
