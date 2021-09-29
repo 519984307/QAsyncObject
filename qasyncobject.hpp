@@ -15,7 +15,7 @@ public:
     // QObject interface
     bool eventFilter(QObject *watched, QEvent *event) override;
 
-public slots:
+private slots:
     virtual void init();
 
 private:
