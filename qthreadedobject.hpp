@@ -1,16 +1,16 @@
-#ifndef QASYNCOBJECT_HPP
-#define QASYNCOBJECT_HPP
+#ifndef QTHREADEDOBJECT_HPP
+#define QTHREADEDOBJECT_HPP
 
 #include <QObject>
 #include <QThread>
 #include <QEvent>
 
-class QAsyncObject : public QObject
+class QThreadedObject : public QObject
 {
     Q_OBJECT
 public:
-    explicit QAsyncObject(QObject *parent = nullptr);
-    virtual ~QAsyncObject();
+    explicit QThreadedObject(QObject *parent = nullptr);
+    virtual ~QThreadedObject();
 
     // QObject interface
     bool eventFilter(QObject *watched, QEvent *event) override;
@@ -22,24 +22,24 @@ private:
     QThread mThread;
 };
 
-inline QAsyncObject::QAsyncObject(QObject *parent) : QObject(parent)
+inline QThreadedObject::QThreadedObject(QObject *parent) : QObject(parent)
 {
     installEventFilter(this);
     moveToThread(&mThread);
 }
 
-inline QAsyncObject::~QAsyncObject(){
+inline QThreadedObject::~QThreadedObject(){
     mThread.quit();
     mThread.wait();
 }
 
-inline bool QAsyncObject::eventFilter(QObject *watched, QEvent *event)
+inline bool QThreadedObject::eventFilter(QObject *watched, QEvent *event)
 {
     Q_UNUSED(watched);
 
     switch (event->type()) {
     case QEvent::ThreadChange:
-        connect(&mThread, &QThread::started, this, &QAsyncObject::init);
+        connect(&mThread, &QThread::started, this, &QThreadedObject::init);
         mThread.start();
         return true;
     default:
@@ -47,6 +47,6 @@ inline bool QAsyncObject::eventFilter(QObject *watched, QEvent *event)
     }
 }
 
-inline void QAsyncObject::init(){}
+inline void QThreadedObject::init(){}
 
-#endif // QASYNCOBJECT_HPP
+#endif // QTHREADEDOBJECT_HPP
