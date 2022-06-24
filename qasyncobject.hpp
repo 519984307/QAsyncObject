@@ -39,7 +39,7 @@ inline bool QAsyncObject::eventFilter(QObject *watched, QEvent *event)
 
     switch (event->type()) {
     case QEvent::ThreadChange:
-        connect(&mThread, &QThread::started, this, &QThreadedObject::init);
+        connect(&mThread, &QThread::started, this, &QAsyncObject::init);
         mThread.start();
         return true;
     default:
