@@ -1,12 +1,12 @@
-# QThreadedObject
+# QAsyncObject
 A helper base class for automatize movetothread() and initialize variables in thread's memory by running init()
 
 ## Usage
 ```C++
-#include "qthreadedobject.hpp"
+#include "qasyncobject.hpp"
 #include <QDebug>
 
-class MyClass : public QThreadedObject
+class MyClass : public QAsyncObject
 {
 public:
     MyClass()
