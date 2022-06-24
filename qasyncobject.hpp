@@ -13,7 +13,7 @@ public:
     virtual ~QAsyncObject();
 
     // QObject interface
-    bool eventFilter(QObject *watched, QEvent *event) override;
+    bool event(QEvent *event) override;
 
 private slots:
     virtual void init();
@@ -24,7 +24,6 @@ private:
 
 inline QAsyncObject::QAsyncObject(QObject *parent) : QObject(parent)
 {
-    installEventFilter(this);
     moveToThread(&mThread);
 }
 
@@ -33,20 +32,18 @@ inline QAsyncObject::~QAsyncObject(){
     mThread.wait();
 }
 
-inline bool QAsyncObject::eventFilter(QObject *watched, QEvent *event)
-{
-    Q_UNUSED(watched);
+inline void QAsyncObject::init(){}
 
+inline bool QAsyncObject::event(QEvent *event)
+{
     switch (event->type()) {
     case QEvent::ThreadChange:
         connect(&mThread, &QThread::started, this, &QAsyncObject::init);
         mThread.start();
         return true;
     default:
-        return false;
+        return QObject::event(event);
     }
 }
-
-inline void QAsyncObject::init(){}
 
 #endif // QASYNCOBJECT_HPP
